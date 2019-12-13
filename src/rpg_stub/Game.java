@@ -2,9 +2,9 @@ package rpg_stub;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
-public class CollisionEx extends JFrame {
+public class Game extends JFrame {
 
-    public CollisionEx() {
+    public Game() {
         
         initUI();
     }
@@ -16,7 +16,7 @@ public class CollisionEx extends JFrame {
         setResizable(false);
         pack();
         
-        setTitle("Test");
+        setTitle("RPG stub");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -24,7 +24,7 @@ public class CollisionEx extends JFrame {
     public static void main(String[] args) {
         
         EventQueue.invokeLater(() -> {
-            CollisionEx ex = new CollisionEx();
+        	Game ex = new Game();
             ex.setVisible(true);
         });
     }

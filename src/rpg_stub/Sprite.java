@@ -19,7 +19,8 @@ public class Sprite {
         visible = true;
     }
 
-    protected void getImageDimensions() {
+
+	protected void getImageDimensions() {
 
         width = image.getWidth(null);
         height = image.getHeight(null);

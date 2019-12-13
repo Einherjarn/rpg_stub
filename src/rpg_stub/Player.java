@@ -3,13 +3,13 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpaceShip extends Sprite {
+public class Player extends Sprite {
 
     private int dx;
     private int dy;
     private List<Missile> missiles;
 
-    public SpaceShip(int x, int y) {
+    public Player(int x, int y) {
         super(x, y);
 
         initCraft();

@@ -18,13 +18,14 @@ import javax.swing.Timer;
 public class Board extends JPanel implements ActionListener {
 
     private Timer timer;
-    private SpaceShip spaceship;
+    private Player player;
+    private Map map;
     private List<Alien> aliens;
     private boolean ingame;
     private final int ICRAFT_X = 40;
     private final int ICRAFT_Y = 60;
-    private final int B_WIDTH = 400;
-    private final int B_HEIGHT = 300;
+    private final int B_WIDTH = 1000;
+    private final int B_HEIGHT = 1000;
     private final int DELAY = 15;
 
     private final int[][] pos = {
@@ -53,14 +54,15 @@ public class Board extends JPanel implements ActionListener {
 
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
 
-        spaceship = new SpaceShip(ICRAFT_X, ICRAFT_Y);
-
+        player = new Player(ICRAFT_X, ICRAFT_Y);
+        map = new Map(0,0,"resources/map_01_devtest.png");
+        
         initAliens();
 
         timer = new Timer(DELAY, this);
         timer.start();
     }
-
+    
     public void initAliens() {
         
         aliens = new ArrayList<>();
@@ -87,13 +89,18 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void drawObjects(Graphics g) {
-
-        if (spaceship.isVisible()) {
-            g.drawImage(spaceship.getImage(), spaceship.getX(), spaceship.getY(),
+    	
+    	if (map.isVisible()) {
+            g.drawImage(map.getImage(), map.getX(), map.getY(),
+                    this);
+        }
+    	
+        if (player.isVisible()) {
+            g.drawImage(player.getImage(), player.getX(), player.getY(),
                     this);
         }
 
-        List<Missile> ms = spaceship.getMissiles();
+        List<Missile> ms = player.getMissiles();
 
         for (Missile missile : ms) {
             if (missile.isVisible()) {
@@ -147,15 +154,15 @@ public class Board extends JPanel implements ActionListener {
 
     private void updateShip() {
 
-        if (spaceship.isVisible()) {
+        if (player.isVisible()) {
             
-            spaceship.move();
+        	player.move();
         }
     }
 
     private void updateMissiles() {
 
-        List<Missile> ms = spaceship.getMissiles();
+        List<Missile> ms = player.getMissiles();
 
         for (int i = 0; i < ms.size(); i++) {
 
@@ -191,7 +198,7 @@ public class Board extends JPanel implements ActionListener {
 
     public void checkCollisions() {
 
-        Rectangle r3 = spaceship.getBounds();
+        Rectangle r3 = player.getBounds();
 
         for (Alien alien : aliens) {
             
@@ -199,13 +206,13 @@ public class Board extends JPanel implements ActionListener {
 
             if (r3.intersects(r2)) {
                 
-                spaceship.setVisible(false);
+                player.setVisible(false);
                 alien.setVisible(false);
                 ingame = false;
             }
         }
 
-        List<Missile> ms = spaceship.getMissiles();
+        List<Missile> ms = player.getMissiles();
 
         for (Missile m : ms) {
 
@@ -228,12 +235,12 @@ public class Board extends JPanel implements ActionListener {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            spaceship.keyReleased(e);
+            player.keyReleased(e);
         }
 
         @Override
         public void keyPressed(KeyEvent e) {
-            spaceship.keyPressed(e);
+            player.keyPressed(e);
         }
     }
 }
