@@ -19,8 +19,7 @@ public class Board extends JPanel implements ActionListener {
 
     private Timer timer;
     private Player player;
-    private Map map;
-    private List<Alien> aliens;
+    private Map activemap;
     private boolean ingame;
     private final int B_WIDTH = 1000;
     private final int B_HEIGHT = 1000;
@@ -39,9 +38,9 @@ public class Board extends JPanel implements ActionListener {
         ingame = true;
 
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
-
-        player = new Player(50, 50);
-        map = new Map(0,0,"resources/map_01_devtest.png");
+        
+        player = new Player(50, 50, "resources/player.png", 10);
+        activemap = new Map(0,0,"resources/map_01_devtest.png");
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -65,23 +64,14 @@ public class Board extends JPanel implements ActionListener {
 
     private void drawObjects(Graphics g) {
     	
-    	if (map.isVisible()) {
-            g.drawImage(map.getImage(), map.getX(), map.getY(),
+    	if (activemap.isVisible()) {
+            g.drawImage(activemap.getImage(), activemap.getX(), activemap.getY(),
                     this);
         }
     	
         if (player.isVisible()) {
             g.drawImage(player.getImage(), player.getX(), player.getY(),
                     this);
-        }
-
-        List<Missile> ms = player.getMissiles();
-
-        for (Missile missile : ms) {
-            if (missile.isVisible()) {
-                g.drawImage(missile.getImage(), missile.getX(), 
-                        missile.getY(), this);
-            }
         }
     }
 
@@ -101,10 +91,7 @@ public class Board extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         inGame();
-
         updatePlayer();
-        updateMissiles();
-
         checkCollisions();
 
         repaint();
@@ -125,32 +112,8 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    private void updateMissiles() {
-
-        List<Missile> ms = player.getMissiles();
-
-        for (int i = 0; i < ms.size(); i++) {
-
-            Missile m = ms.get(i);
-
-            if (m.isVisible()) {
-                m.move();
-            } else {
-                ms.remove(i);
-            }
-        }
-    }
 
     public void checkCollisions() {
-
-        Rectangle r3 = player.getBounds();
-
-        List<Missile> ms = player.getMissiles();
-
-        for (Missile m : ms) {
-
-            Rectangle r1 = m.getBounds();
-        }
     }
 
     private class TAdapter extends KeyAdapter {

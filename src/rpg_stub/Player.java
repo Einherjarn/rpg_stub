@@ -3,25 +3,22 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player extends Sprite {
+public class Player extends Object {
 
     private float dx;
     private float dy;
-    private float speed;
-    private List<Missile> missiles;
+    protected float speed;
+    
+    public Player(int x, int y, String name, float radius) {
+        super(x, y, name, radius);
 
-    public Player(int x, int y) {
-        super(x, y);
-
-        initCraft();
+        initPlayer();
     }
 
-    private void initCraft() {
-        
-        missiles = new ArrayList<>();
+    private void initPlayer() {
+    	
+    	//loadImage("resources/player.png");
         speed = 2;
-        loadImage("resources/player.png");
-        getImageDimensions();
     }
 
     public void move() {
@@ -29,27 +26,19 @@ public class Player extends Sprite {
         x += dx * speed;
         y += dy * speed;
 
-        if (x < 1) {
-            x = 1;
+        if (x < 0) {
+            x = 0;
         }
 
-        if (y < 1) {
-            y = 1;
+        if (y < 0) {
+            y = 0;
         }
-    }
-
-    public List<Missile> getMissiles() {
-        return missiles;
     }
 
     public void keyPressed(KeyEvent e) {
 
         int key = e.getKeyCode();
-
-        if (key == KeyEvent.VK_SPACE) {
-            fire();
-        }
-
+        
         if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
             dx = -1;
         }
@@ -65,10 +54,6 @@ public class Player extends Sprite {
         if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
             dy = 1;
         }
-    }
-
-    public void fire() {
-        missiles.add(new Missile(x + width, y + height / 2));
     }
 
     public void keyReleased(KeyEvent e) {
