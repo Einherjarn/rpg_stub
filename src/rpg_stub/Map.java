@@ -1,5 +1,10 @@
 package rpg_stub;
+
+import java.util.List;
+
 public class Map extends Sprite {
+	private List<CollisionObject> CollisionObjects;
+	
     public Map(int x, int y, String mapname) {
         super(x, y);
 
@@ -10,5 +15,9 @@ public class Map extends Sprite {
         
         loadImage(mapname);
         getImageDimensions();        
+    }
+    
+    public List<CollisionObject> getCollisionObjects() {
+        return CollisionObjects;
     }
 }

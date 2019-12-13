@@ -22,23 +22,9 @@ public class Board extends JPanel implements ActionListener {
     private Map map;
     private List<Alien> aliens;
     private boolean ingame;
-    private final int ICRAFT_X = 40;
-    private final int ICRAFT_Y = 60;
     private final int B_WIDTH = 1000;
     private final int B_HEIGHT = 1000;
     private final int DELAY = 15;
-
-    private final int[][] pos = {
-        {2380, 29}, {2500, 59}, {1380, 89},
-        {780, 109}, {580, 139}, {680, 239},
-        {790, 259}, {760, 50}, {790, 150},
-        {980, 209}, {560, 45}, {510, 70},
-        {930, 159}, {590, 80}, {530, 60},
-        {940, 59}, {990, 30}, {920, 200},
-        {900, 259}, {660, 50}, {540, 90},
-        {810, 220}, {860, 20}, {740, 180},
-        {820, 128}, {490, 170}, {700, 30}
-    };
 
     public Board() {
 
@@ -54,22 +40,11 @@ public class Board extends JPanel implements ActionListener {
 
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
 
-        player = new Player(ICRAFT_X, ICRAFT_Y);
+        player = new Player(50, 50);
         map = new Map(0,0,"resources/map_01_devtest.png");
-        
-        initAliens();
 
         timer = new Timer(DELAY, this);
         timer.start();
-    }
-    
-    public void initAliens() {
-        
-        aliens = new ArrayList<>();
-
-        for (int[] p : pos) {
-            aliens.add(new Alien(p[0], p[1]));
-        }
     }
 
     @Override
@@ -108,15 +83,6 @@ public class Board extends JPanel implements ActionListener {
                         missile.getY(), this);
             }
         }
-
-        for (Alien alien : aliens) {
-            if (alien.isVisible()) {
-                g.drawImage(alien.getImage(), alien.getX(), alien.getY(), this);
-            }
-        }
-
-        g.setColor(Color.BLACK);
-        g.drawString("Aliens left: " + aliens.size(), 5, 15);
     }
 
     private void drawGameOver(Graphics g) {
@@ -136,9 +102,8 @@ public class Board extends JPanel implements ActionListener {
 
         inGame();
 
-        updateShip();
+        updatePlayer();
         updateMissiles();
-        updateAliens();
 
         checkCollisions();
 
@@ -152,7 +117,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    private void updateShip() {
+    private void updatePlayer() {
 
         if (player.isVisible()) {
             
@@ -176,58 +141,15 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    private void updateAliens() {
-
-        if (aliens.isEmpty()) {
-
-            ingame = false;
-            return;
-        }
-
-        for (int i = 0; i < aliens.size(); i++) {
-
-            Alien a = aliens.get(i);
-            
-            if (a.isVisible()) {
-                a.move();
-            } else {
-                aliens.remove(i);
-            }
-        }
-    }
-
     public void checkCollisions() {
 
         Rectangle r3 = player.getBounds();
-
-        for (Alien alien : aliens) {
-            
-            Rectangle r2 = alien.getBounds();
-
-            if (r3.intersects(r2)) {
-                
-                player.setVisible(false);
-                alien.setVisible(false);
-                ingame = false;
-            }
-        }
 
         List<Missile> ms = player.getMissiles();
 
         for (Missile m : ms) {
 
             Rectangle r1 = m.getBounds();
-
-            for (Alien alien : aliens) {
-
-                Rectangle r2 = alien.getBounds();
-
-                if (r1.intersects(r2)) {
-                    
-                    m.setVisible(false);
-                    alien.setVisible(false);
-                }
-            }
         }
     }
 
