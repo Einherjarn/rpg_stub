@@ -2,9 +2,9 @@ package rpg_stub;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
-public class ShootingMissilesEx extends JFrame {
+public class CollisionEx extends JFrame {
 
-    public ShootingMissilesEx() {
+    public CollisionEx() {
         
         initUI();
     }
@@ -13,10 +13,10 @@ public class ShootingMissilesEx extends JFrame {
         
         add(new Board());
         
-        setSize(400, 300);
         setResizable(false);
+        pack();
         
-        setTitle("Shooting missiles");
+        setTitle("Test");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -24,7 +24,7 @@ public class ShootingMissilesEx extends JFrame {
     public static void main(String[] args) {
         
         EventQueue.invokeLater(() -> {
-            ShootingMissilesEx ex = new ShootingMissilesEx();
+            CollisionEx ex = new CollisionEx();
             ex.setVisible(true);
         });
     }
