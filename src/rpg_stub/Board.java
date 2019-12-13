@@ -25,6 +25,8 @@ public class Board extends JPanel implements ActionListener {
     private final int B_HEIGHT = 1000;
     private final int DELAY = 15;
 
+    protected List<Object> objects = new ArrayList<Object>();
+    
     public Board() {
 
         initBoard();
@@ -41,6 +43,8 @@ public class Board extends JPanel implements ActionListener {
         
         player = new Player(50, 50, "resources/player.png", 10);
         activemap = new Map(0,0,"resources/map_01_devtest.png");
+        
+        objects.add(new Object(175,175,"resources/collision_object_shittytree.png", 20));
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -65,13 +69,17 @@ public class Board extends JPanel implements ActionListener {
     private void drawObjects(Graphics g) {
     	
     	if (activemap.isVisible()) {
-            g.drawImage(activemap.getImage(), activemap.getX(), activemap.getY(),
-                    this);
+            g.drawImage(activemap.getImage(), activemap.getX(), activemap.getY(), this);
         }
     	
         if (player.isVisible()) {
-            g.drawImage(player.getImage(), player.getX(), player.getY(),
-                    this);
+            g.drawImage(player.getImage(), player.getX(), player.getY(), this);
+        }
+        for(Object obj : objects) {
+        	if(obj.isVisible()) {
+        		//System.out.print("debug");
+        		g.drawImage(obj.getImage(), obj.getX(), obj.getY(), this);
+        	}
         }
     }
 

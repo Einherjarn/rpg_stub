@@ -8,10 +8,13 @@ public class Object extends Sprite {
     public Object(int x, int y, String objname, float radius) {
         super(x, y);
 
+        //System.out.print(x);
+        //System.out.print(y);
+        //System.out.print(objname);
         initObject(objname, radius);
     }
     
-    private void initObject(String objname, float radius) {        
+    private void initObject(String objname, float radius) {  
         loadImage(objname);
         colx = getX() + (getWidth() / 2);
         coly = getY() + (getHeight() / 2);
