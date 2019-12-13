@@ -5,8 +5,9 @@ import java.util.List;
 
 public class Player extends Sprite {
 
-    private int dx;
-    private int dy;
+    private float dx;
+    private float dy;
+    private float speed;
     private List<Missile> missiles;
 
     public Player(int x, int y) {
@@ -18,14 +19,15 @@ public class Player extends Sprite {
     private void initCraft() {
         
         missiles = new ArrayList<>();
+        speed = 2;
         loadImage("resources/spaceship.png");
         getImageDimensions();
     }
 
     public void move() {
 
-        x += dx;
-        y += dy;
+        x += dx * speed;
+        y += dy * speed;
 
         if (x < 1) {
             x = 1;
@@ -48,19 +50,19 @@ public class Player extends Sprite {
             fire();
         }
 
-        if (key == KeyEvent.VK_LEFT) {
+        if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
             dx = -1;
         }
 
-        if (key == KeyEvent.VK_RIGHT) {
+        if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
             dx = 1;
         }
 
-        if (key == KeyEvent.VK_UP) {
+        if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
             dy = -1;
         }
 
-        if (key == KeyEvent.VK_DOWN) {
+        if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
             dy = 1;
         }
     }
@@ -73,19 +75,19 @@ public class Player extends Sprite {
 
         int key = e.getKeyCode();
 
-        if (key == KeyEvent.VK_LEFT) {
+        if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
             dx = 0;
         }
 
-        if (key == KeyEvent.VK_RIGHT) {
+        if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
             dx = 0;
         }
 
-        if (key == KeyEvent.VK_UP) {
+        if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
             dy = 0;
         }
 
-        if (key == KeyEvent.VK_DOWN) {
+        if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
             dy = 0;
         }
     }
