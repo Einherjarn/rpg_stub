@@ -34,7 +34,14 @@ public class Player extends Object {
             y = 0;
         }
     }
-
+    
+    public void setPos(int newx, int newy) {
+    	this.updateObject();
+    	x = newx - (this.getWidth()/2);
+    	y = newy - (this.getHeight()/2);
+    	this.updateObject();
+    }
+    
     public void keyPressed(KeyEvent e) {
 
         int key = e.getKeyCode();

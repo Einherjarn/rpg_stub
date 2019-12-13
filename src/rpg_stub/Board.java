@@ -44,7 +44,7 @@ public class Board extends JPanel implements ActionListener {
         player = new Player(50, 50, "resources/player.png", 10);
         activemap = new Map(0,0,"resources/map_01_devtest.png");
         
-        objects.add(new Object(175,175,"resources/collision_object_shittytree.png", 20));
+        objects.add(new Object(175,175,"resources/collision_object_debug_100px.png", 40));
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -72,14 +72,15 @@ public class Board extends JPanel implements ActionListener {
             g.drawImage(activemap.getImage(), activemap.getX(), activemap.getY(), this);
         }
     	
-        if (player.isVisible()) {
-            g.drawImage(player.getImage(), player.getX(), player.getY(), this);
-        }
-        for(Object obj : objects) {
+    	for(Object obj : objects) {
         	if(obj.isVisible()) {
         		//System.out.print("debug");
         		g.drawImage(obj.getImage(), obj.getX(), obj.getY(), this);
         	}
+        }
+    	
+        if (player.isVisible()) {
+            g.drawImage(player.getImage(), player.getX(), player.getY(), this);
         }
     }
 
@@ -122,6 +123,23 @@ public class Board extends JPanel implements ActionListener {
 
 
     public void checkCollisions() {
+    	for(Object obj : objects) {
+    		player.updateObject();
+    		obj.updateObject();
+        	if(obj.isVisible()) {
+        		double dist = Math.sqrt(Math.pow((player.getColX() - obj.getColX()), 2) + Math.pow((player.getColY() - obj.getColY()),2));
+        		dist -= player.getColRadius();
+        		dist -= obj.getColRadius();
+        		if(dist < 0) {
+        			float radius = obj.getColRadius() + player.getColRadius();
+        			float difX = ((player.getColX() - obj.getColX()));
+        			System.out.println(difX);
+        			float difY = ((player.getColY() - obj.getColY()));
+        			//System.out.println(difY);
+        			player.setPos((int) (player.getColX() + difX),(int) (player.getColY() + difY));
+        		}
+        	}
+        }
     }
 
     private class TAdapter extends KeyAdapter {

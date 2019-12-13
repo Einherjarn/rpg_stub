@@ -19,16 +19,12 @@ public class Sprite {
         visible = true;
     }
 
-	protected void getImageDimensions() {
-
-        width = image.getWidth(null);
-        height = image.getHeight(null);
-    }
-
     protected void loadImage(String imageName) {
 
         ImageIcon ii = new ImageIcon(imageName);
         image = ii.getImage();
+        width = image.getWidth(null);
+        height = image.getHeight(null);
     }
 
     public Image getImage() {
