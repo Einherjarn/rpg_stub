@@ -29,6 +29,7 @@ public class Board extends JPanel implements ActionListener {
     protected List<InventoryItem> inventoryitems = new ArrayList<InventoryItem>();
 
     protected List<GameObject> objects = new ArrayList<GameObject>();
+    protected List<Enemy> enemies = new ArrayList<Enemy>();
     
     public Board() {
 
@@ -45,8 +46,12 @@ public class Board extends JPanel implements ActionListener {
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
         
         // public Player(String name, float x, float y, String spritefile, boolean collision, float col_off_x, float col_off_y, float colradius, float speed) {
-        player = new Player("Player", 50, 50, "resources/player.png", true, 0, 0, 10, 2);
+        player = new Player("Player", 50, 50, "resources/player.png", true, 0, 0, 10, (float)1.5);
         activemap = new Map(0,0,"resources/map_01_devtest.png");
+        
+        // public Enemy(String name, float x, float y, String spritefile, boolean collision, float col_off_x, float col_off_y, float colradius,
+		//	float speed, int damage, int health, float aggrorange)
+        enemies.add(new Enemy("Icky Slime", 500, 500, "resources/enemy_slime_green.png", true, 0, 0, 10, (float)1.5, 2, 10, (float)100));
         
         // collision parameters for placeholder trees
         int treecolx = 0;
@@ -131,7 +136,7 @@ public class Board extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         inGame();
-        updatePlayer();
+        updateGame();
         checkCollisions();
 
         repaint();
@@ -145,11 +150,18 @@ public class Board extends JPanel implements ActionListener {
     }
 
     // checks input for movement
-    private void updatePlayer() {
-
+    private void updateGame() {
         if (player.sprite.isVisible()) { 
         	player.move();
         	//System.out.println(player.x);
+        }
+        
+        // for every enemy inside aggrorange..
+        for(Enemy enm : enemies) {
+        	double dist = Math.sqrt(Math.pow((player.getColX() - enm.getColX()), 2) + Math.pow((player.getColY() - enm.getColY()),2));
+        	if (dist < enm.aggrorange) {
+        		
+        	}
         }
     }
 
@@ -184,8 +196,9 @@ public class Board extends JPanel implements ActionListener {
             if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
             	player.dy = 1;}
             if (key == KeyEvent.VK_I) {
-            	show_inventory = !show_inventory;
-            }
+            	show_inventory = !show_inventory;}
+            if (key == KeyEvent.VK_SHIFT) {
+            	player.speed = (float) 3.0;}
         }
     	
         @Override
@@ -199,8 +212,9 @@ public class Board extends JPanel implements ActionListener {
             if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
             	player.dy = 0;}
             if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
-            	player.dy = 0;
-            }
+            	player.dy = 0;}
+            if (key == KeyEvent.VK_SHIFT) {
+            	player.speed = (float) 1.5;}
         }
     }
 }
