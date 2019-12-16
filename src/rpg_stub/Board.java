@@ -46,6 +46,7 @@ public class Board extends JPanel implements ActionListener {
         activemap = new Map(0,0,"resources/map_01_devtest.png");
         
         objects.add(new GameObject("Tree01", 175, 175, "resources/collision_object_debug_100px.png", true, 0, 0, 40));
+        objects.add(new GameObject("Tree02", 100, 175, "resources/collision_object_debug_100px.png", true, 0, 0, 40));
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -125,17 +126,14 @@ public class Board extends JPanel implements ActionListener {
 
     public void checkCollisions() {
     	for(GameObject obj : objects) {
-        	if(obj.sprite.isVisible()) {
+        	if(obj.collision = true) {
         		double dist = Math.sqrt(Math.pow((player.getColX() - obj.getColX()), 2) + Math.pow((player.getColY() - obj.getColY()),2));
-        		dist -= player.getColRadius();
-        		dist -= obj.getColRadius();
-        		if(dist < 0) {
-        			float radius = obj.getColRadius() + player.getColRadius();
-        			float difX = (radius/(player.getColX() - obj.getColX()));
-        			System.out.println(difX);
-        			float difY = (radius/(player.getColY() - obj.getColY()));
-        			//System.out.println(difY);
-        			player.setPos((int) (player.getColX() + difX),(int) (player.getColY() + difY));
+        		double overlap = dist;
+        		overlap -= player.getColRadius();
+        		overlap -= obj.getColRadius();
+        		if(overlap < 0) {
+        			player.x -= overlap * (player.x - obj.x)/dist;
+        			player.y -= overlap * (player.y - obj.y)/dist;
         		}
         	}
         }
