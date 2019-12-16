@@ -25,7 +25,7 @@ public class Board extends JPanel implements ActionListener {
     private final int B_HEIGHT = 1000;
     private final int DELAY = 15;
 
-    protected List<Object> objects = new ArrayList<Object>();
+    protected List<GameObject> objects = new ArrayList<GameObject>();
     
     public Board() {
 
@@ -41,10 +41,11 @@ public class Board extends JPanel implements ActionListener {
 
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
         
-        player = new Player(50, 50, "resources/player.png", 10);
+        // public Player(String name, float x, float y, String spritefile, boolean collision, float col_off_x, float col_off_y, float colradius, float speed) {
+        player = new Player("Player", 50, 50, "resources/player.png", true, 0, 0, 10, 2);
         activemap = new Map(0,0,"resources/map_01_devtest.png");
         
-        objects.add(new Object(175,175,"resources/collision_object_debug_100px.png", 40));
+        objects.add(new GameObject("Tree01", 175, 175, "resources/collision_object_debug_100px.png", true, 0, 0, 40));
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -67,20 +68,20 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void drawObjects(Graphics g) {
-    	
     	if (activemap.isVisible()) {
             g.drawImage(activemap.getImage(), activemap.getX(), activemap.getY(), this);
         }
     	
-    	for(Object obj : objects) {
-        	if(obj.isVisible()) {
-        		//System.out.print("debug");
-        		g.drawImage(obj.getImage(), obj.getX(), obj.getY(), this);
+    	for(GameObject obj : objects) {
+        	if(obj.sprite.isVisible()) {
+        		obj.updateSprite();
+        		g.drawImage(obj.sprite.getImage(), obj.sprite.getX(), obj.sprite.getY(), this);
         	}
         }
     	
-        if (player.isVisible()) {
-            g.drawImage(player.getImage(), player.getX(), player.getY(), this);
+        if (player.sprite.isVisible()) {
+        	player.updateSprite();
+            g.drawImage(player.sprite.getImage(), player.sprite.getX(), player.sprite.getY(), this);
         }
     }
 
@@ -115,26 +116,24 @@ public class Board extends JPanel implements ActionListener {
 
     private void updatePlayer() {
 
-        if (player.isVisible()) {
-            
+        if (player.sprite.isVisible()) { 
         	player.move();
+        	//System.out.println(player.x);
         }
     }
 
 
     public void checkCollisions() {
-    	for(Object obj : objects) {
-    		player.updateObject();
-    		obj.updateObject();
-        	if(obj.isVisible()) {
+    	for(GameObject obj : objects) {
+        	if(obj.sprite.isVisible()) {
         		double dist = Math.sqrt(Math.pow((player.getColX() - obj.getColX()), 2) + Math.pow((player.getColY() - obj.getColY()),2));
         		dist -= player.getColRadius();
         		dist -= obj.getColRadius();
         		if(dist < 0) {
         			float radius = obj.getColRadius() + player.getColRadius();
-        			float difX = ((player.getColX() - obj.getColX()));
+        			float difX = (radius/(player.getColX() - obj.getColX()));
         			System.out.println(difX);
-        			float difY = ((player.getColY() - obj.getColY()));
+        			float difY = (radius/(player.getColY() - obj.getColY()));
         			//System.out.println(difY);
         			player.setPos((int) (player.getColX() + difX),(int) (player.getColY() + difY));
         		}

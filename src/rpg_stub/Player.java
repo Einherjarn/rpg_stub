@@ -3,43 +3,29 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player extends Object {
-
-    private float dx;
-    private float dy;
+public class Player extends GameObject {
     protected float speed;
+    protected float dx;
+    protected float dy;
     
-    public Player(int x, int y, String name, float radius) {
-        super(x, y, name, radius);
-
-        initPlayer();
+    public Player(String name, float x, float y, String spritefile, boolean collision, float col_off_x, float col_off_y, float colradius, float speed) {
+        super(name, x, y, spritefile, collision, col_off_x, col_off_y, colradius);
+        initPlayer(speed);
     }
 
-    private void initPlayer() {
-    	
-    	//loadImage("resources/player.png");
-        speed = 2;
+    private void initPlayer(float speed) {
+        this.speed = speed;
     }
 
     public void move() {
-
-        x += dx * speed;
-        y += dy * speed;
-
-        if (x < 0) {
-            x = 0;
-        }
-
-        if (y < 0) {
-            y = 0;
-        }
+        x += (dx * speed);
+        y += (dy * speed);
+        
     }
     
-    public void setPos(int newx, int newy) {
-    	this.updateObject();
-    	x = newx - (this.getWidth()/2);
-    	y = newy - (this.getHeight()/2);
-    	this.updateObject();
+    public void setPos(float x, float y) {
+    	this.x = x;
+    	this.y = y;
     }
     
     public void keyPressed(KeyEvent e) {
