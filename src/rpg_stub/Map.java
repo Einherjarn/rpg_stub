@@ -1,5 +1,4 @@
 package rpg_stub;
-import java.util.List;
 
 public class Map extends Sprite {
     public Map(int x, int y, String mapname) {

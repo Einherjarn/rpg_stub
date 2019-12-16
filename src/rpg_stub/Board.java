@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +23,8 @@ public class Board extends JPanel implements ActionListener {
     private final int B_WIDTH = 1000;
     private final int B_HEIGHT = 1000;
     private final int DELAY = 15;
+    
+    private Sprite inventorysprite;
 
     protected List<GameObject> objects = new ArrayList<GameObject>();
     
@@ -45,11 +46,14 @@ public class Board extends JPanel implements ActionListener {
         player = new Player("Player", 50, 50, "resources/player.png", true, 0, 0, 10, 2);
         activemap = new Map(0,0,"resources/map_01_devtest.png");
         
-        objects.add(new GameObject("Tree01", 175, 175, "resources/collision_object_shittytree.png", true, 0, 20, 20));
-        objects.add(new GameObject("Tree02", 100, 175, "resources/collision_object_shittytree.png", true, 0, 20, 20));
+        objects.add(new GameObject("Tree01", 125, 140, "resources/collision_object_shittytree.png", true, 0, 20, 20));
+        objects.add(new GameObject("Tree03", 50, 140, "resources/collision_object_shittytree.png", true, 0, 20, 20));
+        objects.add(new GameObject("Tree02", 75, 150, "resources/collision_object_shittytree.png", true, 0, 20, 20));
 
         timer = new Timer(DELAY, this);
         timer.start();
+        inventorysprite = new Sprite(800, 700);
+        inventorysprite.loadImage("resources/ui_inventory_crappy.png");
     }
 
     @Override
@@ -57,32 +61,34 @@ public class Board extends JPanel implements ActionListener {
         super.paintComponent(g);
 
         if (ingame) {
-
             drawObjects(g);
 
         } else {
-
             drawGameOver(g);
         }
 
         Toolkit.getDefaultToolkit().sync();
     }
 
+    // update sprite positions and draw objects
     private void drawObjects(Graphics g) {
     	if (activemap.isVisible()) {
             g.drawImage(activemap.getImage(), activemap.getX(), activemap.getY(), this);
         }
     	
-    	for(GameObject obj : objects) {
+        if (player.sprite.isVisible()) {
+        	player.updateSprite();
+            g.drawImage(player.sprite.getImage(), player.sprite.getX(), player.sprite.getY(), this);
+        }
+        
+        for(GameObject obj : objects) {
         	if(obj.sprite.isVisible()) {
         		obj.updateSprite();
         		g.drawImage(obj.sprite.getImage(), obj.sprite.getX(), obj.sprite.getY(), this);
         	}
         }
-    	
-        if (player.sprite.isVisible()) {
-        	player.updateSprite();
-            g.drawImage(player.sprite.getImage(), player.sprite.getX(), player.sprite.getY(), this);
+        if(inventorysprite.isVisible()) {
+        	g.drawImage(inventorysprite.getImage(), inventorysprite.getX(), inventorysprite.getY(), this);
         }
     }
 
@@ -133,13 +139,13 @@ public class Board extends JPanel implements ActionListener {
         		overlap -= player.getColRadius();
         		overlap -= obj.getColRadius();
         		if(overlap < 0) {
-        			player.x -= overlap * (player.x - obj.getColX())/dist;
-        			player.y -= overlap * (player.y - obj.getColY())/dist;
+        			player.x -= overlap * (player.getColX() - obj.getColX())/dist;
+        			player.y -= overlap * (player.getColY() - obj.getColY())/dist;
         		}
         	}
         }
     }
-
+    
     private class TAdapter extends KeyAdapter {
 
         @Override

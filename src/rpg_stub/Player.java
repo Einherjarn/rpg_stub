@@ -1,7 +1,5 @@
 package rpg_stub;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Player extends GameObject {
     protected float speed;
