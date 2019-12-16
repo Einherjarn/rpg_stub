@@ -13,10 +13,10 @@ public class GameObject {
 	protected float colradius;
 	
 	public GameObject(String name, float x, float y, String spritefile, boolean collision, float col_off_x, float col_off_y, float colradius) {
-        initObject(name, x, y, spritefile, collision, col_off_x, col_off_y, colradius);
+        initGameObject(name, x, y, spritefile, collision, col_off_x, col_off_y, colradius);
     }
     
-    private void initObject(String name, float x, float y, String spritefile, boolean collision, float col_off_x, float col_off_y, float colradius) {
+    private void initGameObject(String name, float x, float y, String spritefile, boolean collision, float col_off_x, float col_off_y, float colradius) {
     	sprite = new Sprite((int) Math.round(x), (int) Math.round(y));
         sprite.loadImage(spritefile);
         sprite.setX( (int) (Math.round(x - (sprite.getWidth()/2))) );

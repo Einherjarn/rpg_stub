@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -24,6 +25,7 @@ public class Board extends JPanel implements ActionListener {
     private final int B_HEIGHT = 1000;
     private final int DELAY = 15;
     
+    private boolean show_inventory;
     private Sprite inventorysprite;
 
     protected List<GameObject> objects = new ArrayList<GameObject>();
@@ -46,14 +48,23 @@ public class Board extends JPanel implements ActionListener {
         player = new Player("Player", 50, 50, "resources/player.png", true, 0, 0, 10, 2);
         activemap = new Map(0,0,"resources/map_01_devtest.png");
         
-        objects.add(new GameObject("Tree01", 125, 140, "resources/collision_object_shittytree.png", true, 0, 20, 20));
-        objects.add(new GameObject("Tree03", 50, 140, "resources/collision_object_shittytree.png", true, 0, 20, 20));
-        objects.add(new GameObject("Tree02", 75, 150, "resources/collision_object_shittytree.png", true, 0, 20, 20));
-
+        // collision parameters for placeholder trees
+        int treecolx = 0;
+        int treecoly = 30;
+        int treerad = 20;
+        
+        // make some trees
+        int[] trees_x = {125,50,75,261,337,297,330,268,300,474,531,434,320,414,337,336,459,360,362};
+        int[] trees_y = {140,140,150,11,12,19,43,48,63,310,342,363,466,476,497,540,540,600,679};
+        for(int i=0; i< trees_x.length; i++) {
+        	objects.add(new GameObject("Tree", trees_x[i],trees_y[i], "resources/collision_object_shittytree.png", true, treecolx, treecoly, treerad));
+        }
+        
         timer = new Timer(DELAY, this);
         timer.start();
         inventorysprite = new Sprite(800, 700);
         inventorysprite.loadImage("resources/ui_inventory_crappy.png");
+        show_inventory = true;
     }
 
     @Override
@@ -87,7 +98,8 @@ public class Board extends JPanel implements ActionListener {
         		g.drawImage(obj.sprite.getImage(), obj.sprite.getX(), obj.sprite.getY(), this);
         	}
         }
-        if(inventorysprite.isVisible()) {
+        if(show_inventory) {
+        	inventorysprite.setVisible(show_inventory);
         	g.drawImage(inventorysprite.getImage(), inventorysprite.getX(), inventorysprite.getY(), this);
         }
     }
@@ -146,16 +158,38 @@ public class Board extends JPanel implements ActionListener {
         }
     }
     
+    // key press detection stuff
     private class TAdapter extends KeyAdapter {
-
+    	@Override
+        public void keyPressed(KeyEvent e) {
+    		int key = e.getKeyCode();
+            
+            if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
+                player.dx = -1;}
+            if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
+            	player.dx = 1;}
+            if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
+            	player.dy = -1;}
+            if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
+            	player.dy = 1;}
+            if (key == KeyEvent.VK_I) {
+            	show_inventory = !show_inventory;
+            }
+        }
+    	
         @Override
         public void keyReleased(KeyEvent e) {
-            player.keyReleased(e);
-        }
+        	int key = e.getKeyCode();
 
-        @Override
-        public void keyPressed(KeyEvent e) {
-            player.keyPressed(e);
+            if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
+            	player.dx = 0;}
+            if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
+            	player.dx = 0;}
+            if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
+            	player.dy = 0;}
+            if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
+            	player.dy = 0;
+            }
         }
     }
 }
