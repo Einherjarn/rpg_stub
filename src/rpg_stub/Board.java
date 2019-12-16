@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -27,6 +26,7 @@ public class Board extends JPanel implements ActionListener {
     
     private boolean show_inventory;
     private Sprite inventorysprite;
+    protected List<InventoryItem> inventoryitems = new ArrayList<InventoryItem>();
 
     protected List<GameObject> objects = new ArrayList<GameObject>();
     
@@ -65,6 +65,10 @@ public class Board extends JPanel implements ActionListener {
         inventorysprite = new Sprite(800, 700);
         inventorysprite.loadImage("resources/ui_inventory_crappy.png");
         show_inventory = true;
+        
+        //InventoryItem(String name, int sizeX, int sizeY, int baseGoldValue, int row, int col, String spritefile)
+        inventoryitems.add(new InventoryItem("Hp Potion",1,1, 100, 1,1, "resources/item_healthpotion.png"));
+        inventoryitems.add(new InventoryItem("Shoddy Axe",2,1, 100, 2,1, "resources/item_axe01.png"));
     }
 
     @Override
@@ -101,6 +105,13 @@ public class Board extends JPanel implements ActionListener {
         if(show_inventory) {
         	inventorysprite.setVisible(show_inventory);
         	g.drawImage(inventorysprite.getImage(), inventorysprite.getX(), inventorysprite.getY(), this);
+        	
+        	for(InventoryItem item : inventoryitems) {
+            	if(item.sprite.isVisible()) {
+            		item.updateSprite();
+            		g.drawImage(item.sprite.getImage(), item.sprite.getX(), item.sprite.getY(), this);
+            	}
+            }
         }
     }
 
