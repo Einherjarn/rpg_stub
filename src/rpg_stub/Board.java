@@ -51,7 +51,7 @@ public class Board extends JPanel implements ActionListener {
         
         // public Enemy(String name, float x, float y, String spritefile, boolean collision, float col_off_x, float col_off_y, float colradius,
 		//	float speed, int damage, int health, float aggrorange)
-        enemies.add(new Enemy("Icky Slime", 500, 500, "resources/enemy_slime_green.png", true, 0, 0, 10, (float)1.5, 2, 10, (float)100));
+        enemies.add(new Enemy("Icky Slime", 100, 100, "resources/enemy_slime_green.png", true, 0, 0, 10, (float)1.5, 2, 10, (float)100));
         
         // collision parameters for placeholder trees
         int treecolx = 0;
@@ -92,21 +92,34 @@ public class Board extends JPanel implements ActionListener {
 
     // update sprite positions and draw objects
     private void drawObjects(Graphics g) {
+    	// draw sprite for map
     	if (activemap.isVisible()) {
             g.drawImage(activemap.getImage(), activemap.getX(), activemap.getY(), this);
         }
     	
+    	// draw sprite for player
         if (player.sprite.isVisible()) {
         	player.updateSprite();
             g.drawImage(player.sprite.getImage(), player.sprite.getX(), player.sprite.getY(), this);
         }
         
+        // draw sprites for enemies
+        for(Enemy enm : enemies) {
+        	if(enm.sprite.isVisible()) {
+        		enm.updateSprite();
+        		g.drawImage(enm.sprite.getImage(), enm.sprite.getX(), enm.sprite.getY(), this);
+        	}
+        }
+        
+        // draw sprites for objects
         for(GameObject obj : objects) {
         	if(obj.sprite.isVisible()) {
         		obj.updateSprite();
         		g.drawImage(obj.sprite.getImage(), obj.sprite.getX(), obj.sprite.getY(), this);
         	}
         }
+        
+        // draw sprites for inventory and items
         if(show_inventory) {
         	inventorysprite.setVisible(show_inventory);
         	g.drawImage(inventorysprite.getImage(), inventorysprite.getX(), inventorysprite.getY(), this);
@@ -160,13 +173,15 @@ public class Board extends JPanel implements ActionListener {
         for(Enemy enm : enemies) {
         	double dist = Math.sqrt(Math.pow((player.getColX() - enm.getColX()), 2) + Math.pow((player.getColY() - enm.getColY()),2));
         	if (dist < enm.aggrorange) {
-        		
+        		enm.move( (float) ((player.x - enm.x)/dist),(float) ((player.y - enm.y)/dist) );
         	}
         }
     }
 
-    // calculates collisions between player and all gameobjects
+    // calculates collisions
     public void checkCollisions() {
+    	
+    	// collisions between objects and player
     	for(GameObject obj : objects) {
         	if(obj.collision = true) {
         		double dist = Math.sqrt(Math.pow((player.getColX() - obj.getColX()), 2) + Math.pow((player.getColY() - obj.getColY()),2));
@@ -177,6 +192,38 @@ public class Board extends JPanel implements ActionListener {
         			player.x -= overlap * (player.getColX() - obj.getColX())/dist;
         			player.y -= overlap * (player.getColY() - obj.getColY())/dist;
         		}
+        	}
+        }
+    	
+    	// collisions between enemies and player
+    	for(Enemy enm : enemies) {
+        	if(enm.collision = true) {
+        		double dist = Math.sqrt(Math.pow((player.getColX() - enm.getColX()), 2) + Math.pow((player.getColY() - enm.getColY()),2));
+        		double overlap = dist;
+        		overlap -= player.getColRadius();
+        		overlap -= enm.getColRadius();
+        		if(overlap < 0) {
+        			enm.x -= overlap * (enm.getColX() - player.getColX())/dist;
+        			enm.y -= overlap * (enm.getColY() - player.getColY())/dist;
+        		}
+        	}
+        }
+    	
+    	// collisions between enemies and objects
+    	for(Enemy enm : enemies) {
+        	if(enm.collision = true) {
+        		for(GameObject obj : objects) {
+                	if(obj.collision = true) {
+                		double dist = Math.sqrt(Math.pow((enm.getColX() - obj.getColX()), 2) + Math.pow((enm.getColY() - obj.getColY()),2));
+                		double overlap = dist;
+                		overlap -= enm.getColRadius();
+                		overlap -= obj.getColRadius();
+                		if(overlap < 0) {
+                			enm.x -= overlap * (enm.getColX() - obj.getColX())/dist;
+                			enm.y -= overlap * (enm.getColY() - obj.getColY())/dist;
+                		}
+                	}
+                }
         	}
         }
     }

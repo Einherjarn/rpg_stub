@@ -5,8 +5,6 @@ public class Enemy extends GameObject {
     protected int damage;
     protected int health;
     protected float aggrorange;
-    protected float dx;
-    protected float dy;
     
     public Enemy(String name, float x, float y, String spritefile, boolean collision, float col_off_x, float col_off_y, float colradius,
     		float speed, int damage, int health, float aggrorange) {
@@ -21,7 +19,7 @@ public class Enemy extends GameObject {
         this.aggrorange = aggrorange;
     }
 
-    public void move() {
+    public void move(float dx, float dy) {
         x += (dx * speed);
         y += (dy * speed);
         
