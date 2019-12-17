@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -72,7 +74,7 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
         inventorysprite = new Sprite(800, 700);
         inventorysprite.loadImage("resources/ui_inventory_crappy.png");
-        show_inventory = true;
+        show_inventory = false;
         
         //InventoryItem(String name, int sizeX, int sizeY, int baseGoldValue, int row, int col, String spritefile)
         inventoryitems.add(new InventoryItem("Hp Potion",1,1, 100, 1,1, "resources/item_healthpotion.png"));
@@ -133,6 +135,23 @@ public class Board extends JPanel implements ActionListener {
             		g.drawImage(item.sprite.getImage(), item.sprite.getX(), item.sprite.getY(), this);
             	}
             }
+	        // tooltips
+	        Point mouse = MouseInfo.getPointerInfo().getLocation();
+	        Point reference = getRootPane().getLocationOnScreen();
+	        mouse.x -= reference.x;
+	        mouse.y -= reference.y;
+	        //System.out.println(mouse.x +", " +mouse.y);
+	        for(InventoryItem item : inventoryitems) {
+	        	if(item.sprite.isVisible()) {
+	        		if((mouse.x > item.sprite.x) && (mouse.y > item.sprite.y)) {
+	        			if((mouse.x < item.sprite.x+(37*item.sizeX)) && (mouse.y < item.sprite.y+(37*item.sizeY))) {
+	        				g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+	        			    g.setColor(Color.black);
+	        				g.drawString(item.name, 820, 770);
+	        			}
+	        		}
+	        	}
+	        }
         }
     }
 
