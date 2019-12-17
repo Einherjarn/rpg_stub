@@ -24,8 +24,8 @@ public class Board extends JPanel implements ActionListener {
     private Player player;
     private Map activemap;
     private boolean ingame;
-    private final int B_WIDTH = 1000;
-    private final int B_HEIGHT = 1000;
+    private final int B_WIDTH = 700;
+    private final int B_HEIGHT = 700;
     private final int DELAY = 15;
     
     private boolean show_inventory;
@@ -72,7 +72,7 @@ public class Board extends JPanel implements ActionListener {
         
         timer = new Timer(DELAY, this);
         timer.start();
-        inventorysprite = new Sprite(800, 700);
+        inventorysprite = new Sprite(500, 400);
         inventorysprite.loadImage("resources/ui_inventory_crappy.png");
         show_inventory = false;
         
@@ -147,7 +147,7 @@ public class Board extends JPanel implements ActionListener {
 	        			if((mouse.x < item.sprite.x+(37*item.sizeX)) && (mouse.y < item.sprite.y+(37*item.sizeY))) {
 	        				g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
 	        			    g.setColor(Color.black);
-	        				g.drawString(item.name, 820, 770);
+	        				g.drawString(item.name, 520, 470);
 	        			}
 	        		}
 	        	}

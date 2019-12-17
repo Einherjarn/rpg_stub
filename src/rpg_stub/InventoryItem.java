@@ -17,8 +17,8 @@ public class InventoryItem {
         initInventoryItem(name, sizeX, sizeY, baseGoldValue, row, col, spritefile);
     }
 	private void initInventoryItem(String name, int sizeX, int sizeY, int baseGoldValue, int row, int col, String spritefile) {
-		int sprite_x = 800 +15 -37 +row*37;
-		int sprite_y = 700 +77 -37 +col*37;
+		int sprite_x = 500 +15 -37 +row*37;
+		int sprite_y = 400 +77 -37 +col*37;
 		sprite = new Sprite(sprite_x, sprite_y);
         sprite.loadImage(spritefile);
         sprite.setX(sprite_x);
@@ -34,8 +34,8 @@ public class InventoryItem {
 	}
 	
 	public void updateSprite() {
-		int sprite_x = 800 +15 -37 +row*37;
-		int sprite_y = 700 +77 -37 +col*37;
+		int sprite_x = 500 +15 -37 +row*37;
+		int sprite_y = 400 +77 -37 +col*37;
 		sprite.setX(sprite_x);
         sprite.setY(sprite_y);
     }
