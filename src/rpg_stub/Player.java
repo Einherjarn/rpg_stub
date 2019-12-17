@@ -5,6 +5,7 @@ public class Player extends GameObject {
     protected float dx;
     protected float dy;
     protected int health;
+    protected int maxhealth;
     
     public Player(String name, float x, float y, String spritefile, boolean collision, float col_off_x, float col_off_y, float colradius,
     		float speed) {
@@ -15,6 +16,7 @@ public class Player extends GameObject {
     private void initPlayer(float speed) {
         this.speed = speed;
         health = 100;
+        maxhealth = 100;
     }
 
     public void move() {

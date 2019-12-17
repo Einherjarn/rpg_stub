@@ -35,6 +35,11 @@ public class Board extends JPanel implements ActionListener {
     protected List<GameObject> objects = new ArrayList<GameObject>();
     protected List<Enemy> enemies = new ArrayList<Enemy>();
     
+    // collision parameters for placeholder trees
+    private int treecolx = 0;
+    private int treecoly = 30;
+    private int treerad = 20;
+    
     public Board() {
 
         initBoard();
@@ -57,11 +62,6 @@ public class Board extends JPanel implements ActionListener {
         // public Enemy(String name, float x, float y, String spritefile, boolean collision, float col_off_x, float col_off_y, float colradius,
 		//	float speed, int damage, int health, float aggrorange)
         enemies.add(new Enemy("Icky Slime", 100, 100, "resources/enemy_slime_green.png", true, 0, 0, 10, (float)1.5, 2, 10, (float)250));
-        
-        // collision parameters for placeholder trees
-        int treecolx = 0;
-        int treecoly = 30;
-        int treerad = 20;
         
         // make some trees
         int[] trees_x = {125,50,75,261,337,297,330,268,300,474,531,434,320,414,337,336,459,360,362};
@@ -106,6 +106,8 @@ public class Board extends JPanel implements ActionListener {
         if (player.sprite.isVisible()) {
         	player.updateSprite();
             g.drawImage(player.sprite.getImage(), player.sprite.getX(), player.sprite.getY(), this);
+            g.setColor(Color.red);
+            g.fillRect(player.sprite.getX()+5,player.sprite.getY()-5,(int) Math.round(20*((float) player.health/ (float) player.maxhealth)),5);
         }
         
         // draw sprites for enemies
@@ -113,6 +115,8 @@ public class Board extends JPanel implements ActionListener {
         	if(enm.sprite.isVisible()) {
         		enm.updateSprite();
         		g.drawImage(enm.sprite.getImage(), enm.sprite.getX(), enm.sprite.getY(), this);
+        		g.setColor(Color.red);
+                g.fillRect(enm.sprite.getX()+5,enm.sprite.getY()-5,(int) Math.round(20*((float) enm.health/ (float) enm.maxhealth)),5);
         	}
         }
         
@@ -186,6 +190,13 @@ public class Board extends JPanel implements ActionListener {
 
     // checks input for movement
     private void updateGame() {
+    	for(int i=0; i < enemies.size(); i++) {
+    		if(!(enemies.get(i).sprite.isVisible())) {
+    			System.out.print("removed " +enemies.get(i).name);
+    			enemies.remove(i);
+    		}
+    	}
+    	
         if (player.sprite.isVisible()) { 
         	player.move();
         	//System.out.println(player.x);
@@ -193,6 +204,10 @@ public class Board extends JPanel implements ActionListener {
         
         // for every enemy inside aggrorange..
         for(Enemy enm : enemies) {
+			if(enm.health <= 0) {
+				enm.sprite.setVisible(false);
+			    continue;    		
+        	}
         	double dist = Math.sqrt(Math.pow((player.getColX() - enm.getColX()), 2) + Math.pow((player.getColY() - enm.getColY()),2));
         	if (dist < enm.aggrorange) {
         		enm.move( (float) ((player.x - enm.x)/dist),(float) ((player.y - enm.y)/dist) );
@@ -294,7 +309,20 @@ public class Board extends JPanel implements ActionListener {
             int x = e.getX();
             int y = e.getY();
             if (e.getButton() == MouseEvent.BUTTON1) {
-            	System.out.println("debug, clicked: " +x +", " +y);
+            	for(Enemy enm : enemies) {
+            		double dist = Math.sqrt(Math.pow((x - enm.getColX()), 2) + Math.pow((y - enm.getColY()),2));
+            		if(dist < enm.colradius) {
+            			enm.health -= 2;
+            			System.out.println("debug, clicked (" +enm.name +"): " +enm.health +" health, " +x +", " +y);
+            			break;
+            		}
+                }
+            }
+            if (e.getButton() == MouseEvent.BUTTON3) {
+            	enemies.add(new Enemy("Icky Slime", x, y, "resources/enemy_slime_green.png", true, 0, 0, 10, (float)1.5, 2, 10, (float)250));
+            }
+            if (e.getButton() == MouseEvent.BUTTON2) {
+            	objects.add(new GameObject("Tree", x-treecolx,y-treecoly, "resources/collision_object_shittytree.png", true, treecolx, treecoly, treerad));
             }
         }
     }
