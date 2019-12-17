@@ -263,6 +263,23 @@ public class Board extends JPanel implements ActionListener {
                 }
         	}
         }
+    	// collisions between enemies and other enemies
+    	for(Enemy enm : enemies) {
+        	if(enm.collision = true) {
+        		for(Enemy enm2 : enemies) {
+                	if(enm2.collision = true && enm != enm2) {
+                		double dist = Math.sqrt(Math.pow((enm.getColX() - enm2.getColX()), 2) + Math.pow((enm.getColY() - enm2.getColY()),2));
+                		double overlap = dist;
+                		overlap -= enm.getColRadius();
+                		overlap -= enm2.getColRadius();
+                		if(overlap < 0) {
+                			enm.x -= overlap * (enm.getColX() - enm2.getColX())/dist;
+                			enm.y -= overlap * (enm.getColY() - enm2.getColY())/dist;
+                		}
+                	}
+                }
+        	}
+        }
     }
     
     // key press detection (adapter)
