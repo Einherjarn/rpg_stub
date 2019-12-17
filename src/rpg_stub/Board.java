@@ -36,9 +36,11 @@ public class Board extends JPanel implements ActionListener {
     protected List<Enemy> enemies = new ArrayList<Enemy>();
     
     // collision parameters for placeholder trees
-    private int treecolx = 0;
+    private int treecolx = -5;
     private int treecoly = 30;
     private int treerad = 20;
+    
+    private InventoryItem helditem;
     
     public Board() {
 
@@ -192,7 +194,7 @@ public class Board extends JPanel implements ActionListener {
     private void updateGame() {
     	for(int i=0; i < enemies.size(); i++) {
     		if(!(enemies.get(i).sprite.isVisible())) {
-    			System.out.print("removed " +enemies.get(i).name);
+    			System.out.println("removed " +enemies.get(i).name);
     			enemies.remove(i);
     		}
     	}
@@ -334,12 +336,57 @@ public class Board extends JPanel implements ActionListener {
             			break;
             		}
                 }
+            	// pick up inventoryitem
+            	if(show_inventory && helditem == null) {
+        	        Point mouse = MouseInfo.getPointerInfo().getLocation();
+        	        Point reference = getRootPane().getLocationOnScreen();
+        	        mouse.x -= reference.x;
+        	        mouse.y -= reference.y;
+        	        //System.out.println(mouse.x +", " +mouse.y);
+        	        for(InventoryItem item : inventoryitems) {
+        	        	if(item.sprite.isVisible()) {
+        	        		if((mouse.x > item.sprite.x) && (mouse.y > item.sprite.y)) {
+        	        			if((mouse.x < item.sprite.x+(37*item.sizeX)) && (mouse.y < item.sprite.y+(37*item.sizeY))) {
+        	        				System.out.println("moving " +item.name +" from slot (" +item.row +", " +item.col +")");
+        	        				helditem = item;
+        	        			}
+        	        		}
+        	        	}
+        	        }
+            	} else {
+            		helditem = null;
+            	}
             }
             if (e.getButton() == MouseEvent.BUTTON3) {
             	enemies.add(new Enemy("Icky Slime", x, y, "resources/enemy_slime_green.png", true, 0, 0, 10, (float)1.5, 2, 10, (float)250));
             }
             if (e.getButton() == MouseEvent.BUTTON2) {
             	objects.add(new GameObject("Tree", x-treecolx,y-treecoly, "resources/collision_object_shittytree.png", true, treecolx, treecoly, treerad));
+            }
+        }
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+            if (e.getButton() == MouseEvent.BUTTON1) {
+            	if(show_inventory && helditem != null) {
+            		x = x -500 -15;
+            		y = y -400 -77;
+            		int row = (int) Math.round(x/37)+1;
+            		int col = (int) Math.round(y/37)+1;
+            		boolean slotfree = true;
+            		for(InventoryItem item : inventoryitems) {
+            			if(item.row == row && item.col == col) {
+            				slotfree = false;
+            			}
+            		}
+            		if(slotfree) {
+            			System.out.println("placed " +helditem.name +" to slot (" +row +", " +col +")");
+            			helditem.row = row;
+            			helditem.col = col;
+            			helditem = null;
+            		}
+            	}
             }
         }
     }
