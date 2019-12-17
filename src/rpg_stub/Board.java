@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
@@ -38,7 +40,8 @@ public class Board extends JPanel implements ActionListener {
 
     private void initBoard() {
 
-        addKeyListener(new TAdapter());
+        addKeyListener(new GameKeyAdapter());
+        addMouseListener(new GameMouseAdapter());
         setFocusable(true);
         setBackground(Color.WHITE);
         ingame = true;
@@ -51,7 +54,7 @@ public class Board extends JPanel implements ActionListener {
         
         // public Enemy(String name, float x, float y, String spritefile, boolean collision, float col_off_x, float col_off_y, float colradius,
 		//	float speed, int damage, int health, float aggrorange)
-        enemies.add(new Enemy("Icky Slime", 100, 100, "resources/enemy_slime_green.png", true, 0, 0, 10, (float)1.5, 2, 10, (float)100));
+        enemies.add(new Enemy("Icky Slime", 100, 100, "resources/enemy_slime_green.png", true, 0, 0, 10, (float)1.5, 2, 10, (float)250));
         
         // collision parameters for placeholder trees
         int treecolx = 0;
@@ -228,8 +231,8 @@ public class Board extends JPanel implements ActionListener {
         }
     }
     
-    // key press detection stuff
-    private class TAdapter extends KeyAdapter {
+    // key press detection (adapter)
+    private class GameKeyAdapter extends KeyAdapter {
     	@Override
         public void keyPressed(KeyEvent e) {
     		int key = e.getKeyCode();
@@ -262,6 +265,18 @@ public class Board extends JPanel implements ActionListener {
             	player.dy = 0;}
             if (key == KeyEvent.VK_SHIFT) {
             	player.speed = (float) 1.5;}
+        }
+    }
+    
+    // mouse adapter
+    private class GameMouseAdapter extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+            if (e.getButton() == MouseEvent.BUTTON1) {
+            	System.out.println("debug, clicked: " +x +", " +y);
+            }
         }
     }
 }
